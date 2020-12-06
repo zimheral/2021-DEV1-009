@@ -1,18 +1,17 @@
 package com.zimheral.tictactoe;
 
+import com.zimheral.tictactoe.models.Play;
+import com.zimheral.tictactoe.models.Player;
 import lombok.val;
+import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
-import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-@SpringBootTest
 public class BoardDrawingTest {
 
     @Test
+    @DisplayName("Testing possible board drawing logic")
     void shouldDrawBoard() {
 
         //GIVEN
@@ -30,6 +29,7 @@ public class BoardDrawingTest {
     }
 
     @Test
+    @DisplayName("Testing possible board marking logic")
     void shouldWriteInBoard() {
 
         //GIVEN
@@ -61,5 +61,44 @@ public class BoardDrawingTest {
             }
             System.out.println();
         }
+    }
+
+    @Test
+    @DisplayName("Testing marking logic with Player, Play models")
+    void shouldWriteInBoardWithPlayer() {
+
+        //GIVEN
+        Set<Play> playSet = new HashSet<>();
+        playSet.add(Play.builder().playerType(Player.x).row(0).column(0).build());
+        playSet.add(Play.builder().playerType(Player.x).row(1).column(1).build());
+        playSet.add(Play.builder().playerType(Player.x).row(2).column(2).build());
+        playSet.add(Play.builder().playerType(Player.o).row(0).column(1).build());
+        playSet.add(Play.builder().playerType(Player.o).row(0).column(2).build());
+
+        val space = " ";
+        val separator = "|";
+
+        //WHEN
+        for (int i = 0; i < 3; i++) {
+            for (int j = 0; j <= 3; j++) {
+                System.out.print(separator);
+                if (j != 3) {
+                    int row = i;
+                    int col = j;
+                    Optional<Play> playFound = playSet.stream()
+                            .filter(play -> play.getRow() == row && play.getColumn() == col)
+                            .findFirst();
+                    if (playFound.isPresent()) {
+                        System.out.print(playFound.get().getPlayerType());
+                    } else {
+                        System.out.print(space);
+                    }
+                } else {
+                    System.out.print(space);
+                }
+            }
+            System.out.println();
+        }
+
     }
 }
